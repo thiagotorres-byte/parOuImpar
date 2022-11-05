@@ -31,7 +31,7 @@ public class ClienteObject {
     }
 
     public SocketAddress getRemoteSocketAddress(){
-        return  socket.getRemoteSocketAddress();
+        return socket.getRemoteSocketAddress();
     }
 
     public String getMessage() {

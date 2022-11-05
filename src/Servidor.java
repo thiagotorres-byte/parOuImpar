@@ -1,13 +1,10 @@
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 class Servidor {
     public static final int PORT = 9863;
     private ServerSocket serverSocket;
-    private List<ClienteObject> clientes = new LinkedList<>();
+    String parOuImparEscolhaJogadorUm;
 
     public void start() throws IOException {
         serverSocket = new ServerSocket(PORT);
@@ -18,38 +15,87 @@ class Servidor {
     private void serverloop() throws IOException {
 
         while (true){
-            ClienteObject clienteObject = new ClienteObject(serverSocket.accept());
+            ClienteObject jogadorUm = new ClienteObject(serverSocket.accept());
 
-            clientes.add(clienteObject);
+            forcaEscolhaParOuImparJogadorUm(jogadorUm);
 
-            new Thread(() -> clienteLoop(clienteObject)).start();
+            jogadorUm.sendMessage("Aguardando segundo jogador...");
+
+            ClienteObject jogadorDois = new ClienteObject(serverSocket.accept());
+
+            String parOuImparEscolhaJogadorDois = parOuImparEscolhaJogadorUm.equalsIgnoreCase("par") ? "impar" : "par";
+
+            jogadorDois.sendMessage("O jogador: " + jogadorUm.getRemoteSocketAddress() + " escolheu: "
+                    + parOuImparEscolhaJogadorUm + " e agora voce e: " + parOuImparEscolhaJogadorDois);
+
+            sendBothPlayers("Escolha um numero de 0 a 5: ", jogadorUm, jogadorDois);
+
+            new Thread(() -> clienteLoop(jogadorUm, jogadorDois)).start();
         }
+
     }
 
-    public void clienteLoop(ClienteObject clienteObject){
-        String msg;
+    private void forcaEscolhaParOuImparJogadorUm (ClienteObject jogadorUm){
+
+        do {
+            jogadorUm.sendMessage("Escolha 'par' ou 'impar': ");
+            parOuImparEscolhaJogadorUm = jogadorUm.getMessage();
+
+        } while (!"par".equalsIgnoreCase(parOuImparEscolhaJogadorUm) &&
+                !"impar".equalsIgnoreCase(parOuImparEscolhaJogadorUm));
+
+    }
+
+    private void clienteLoop(ClienteObject jogadorUm, ClienteObject jogadorDois){
+        String msgJogadorUm;
+        String msgJogadorDois;
+        int vencedor;
         try {
-            while ((msg = clienteObject.getMessage()) != null) {
-                if (msg.equalsIgnoreCase("sair"))
+            while ((msgJogadorUm = jogadorUm.getMessage()) != null && (msgJogadorDois = jogadorDois.getMessage()) != null) {
+                if (msgJogadorUm.equalsIgnoreCase("sair") || msgJogadorDois.equalsIgnoreCase("sair"))
                     return;
 
-                System.out.println("Cliente: " + clienteObject.getRemoteSocketAddress()+ " enviou a mensagem: " + msg);
-                sendMessageToAll(clienteObject, msg);
+                vencedor = verifyWinner(msgJogadorUm, msgJogadorDois);
+
+                notifyPlayers(vencedor, jogadorUm,jogadorDois);
+
+                sendBothPlayers("Escolha um numero de 0 a 5: ", jogadorUm, jogadorDois);
             }
         } finally {
-            clienteObject.close();
+            jogadorUm.close();
+            jogadorDois.close();
         }
     }
 
-    private void sendMessageToAll (ClienteObject sender, String msg){
-        Iterator<ClienteObject> iterator = clientes.iterator();
-        while(iterator.hasNext()) {
-            ClienteObject clienteObject = iterator.next();
-            if (!sender.equals(clienteObject))
-                if(!clienteObject.sendMessage(msg)){
-                    iterator.remove();
-                }
+    private void notifyPlayers(int vencedor, ClienteObject jogadorUm, ClienteObject jogadorDois) {
+        if (vencedor == 1){
+            jogadorUm.sendMessage("Você ganhou a disputa de par ou impar!");
+            jogadorDois.sendMessage("Você perdeu a disputa de par ou impar!");
+        } else if (vencedor == 2) {
+            jogadorUm.sendMessage("Você perdeu a disputa de par ou impar!");
+            jogadorDois.sendMessage("Você ganhou a disputa de par ou impar!");
+        } else {
+            jogadorUm.sendMessage("Não foi possível identificar o ganhador =(");
+            jogadorDois.sendMessage("Não foi possível identificar o ganhador =(");
         }
+    }
+
+    private int verifyWinner(String msgJogadorUm, String msgJogadorDois) {
+        int resultado = Integer.parseInt(msgJogadorUm) + Integer.parseInt(msgJogadorDois);
+
+        if (resultado % 2 == 0){
+            if(parOuImparEscolhaJogadorUm.equalsIgnoreCase("par"))
+                return 1;
+            else
+                return 2;
+        } else {
+            return 0;
+        }
+    }
+
+    private void sendBothPlayers(String msg, ClienteObject jogadorUm, ClienteObject jogadorDois){
+        jogadorUm.sendMessage(msg);
+        jogadorDois.sendMessage(msg);
     }
 
     public static void main(String[] args) {
