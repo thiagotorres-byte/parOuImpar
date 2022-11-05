@@ -1,8 +1,8 @@
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Scanner;
 
 class Servidor {
     public static final int PORT = 9863;
@@ -16,7 +16,6 @@ class Servidor {
     }
 
     private void serverloop() throws IOException {
-        Scanner scanner;
 
         while (true){
             ClienteObject clienteObject = new ClienteObject(serverSocket.accept());
@@ -31,12 +30,25 @@ class Servidor {
         String msg;
         try {
             while ((msg = clienteObject.getMessage()) != null) {
-                if ("sair".equalsIgnoreCase(msg))
+                if (msg.equalsIgnoreCase("sair"))
                     return;
-                System.out.println("Cliente: " + clienteObject.getRemoteSocketAddress() + "enviou a mensagem: " + msg);
+
+                System.out.println("Cliente: " + clienteObject.getRemoteSocketAddress()+ " enviou a mensagem: " + msg);
+                sendMessageToAll(clienteObject, msg);
             }
         } finally {
             clienteObject.close();
+        }
+    }
+
+    private void sendMessageToAll (ClienteObject sender, String msg){
+        Iterator<ClienteObject> iterator = clientes.iterator();
+        while(iterator.hasNext()) {
+            ClienteObject clienteObject = iterator.next();
+            if (!sender.equals(clienteObject))
+                if(!clienteObject.sendMessage(msg)){
+                    iterator.remove();
+                }
         }
     }
 
