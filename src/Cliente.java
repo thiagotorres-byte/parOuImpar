@@ -1,43 +1,41 @@
-import java.io.OutputStream;
-import java.io.PrintStream;
+import java.io.IOException;
 import java.net.Socket;
 import java.util.Scanner;
 
 class Cliente {
-    public static void main(String[] args) {
-        final String IP = "127.0.0.1";
-        final int PORT = 9876;
+    private Socket clienteSocket;
+    private final String SERVER_ADRESS = "127.0.0.1";
+    private Scanner scanner;
+    ClienteObject clienteObject;
+
+    public Cliente() throws IOException {
+        clienteObject = new ClienteObject(
+                new Socket(SERVER_ADRESS, Servidor.PORT)
+        );
+        this.scanner = new Scanner(System.in);
+    }
+
+    public void start() throws IOException {
+        clienteSocket = new Socket(SERVER_ADRESS, Servidor.PORT);
+
+        enviarMensagemLoop();
+    }
+
+    private void enviarMensagemLoop() {
         String msg;
+        do {
+            System.out.println("Digite uma mensagem: ");
+            msg = scanner.nextLine();
+            clienteObject.sendMessage(msg);
+        } while(!msg.equalsIgnoreCase("sair"));
+    }
 
+    public static void main(String[] args) {
         try {
-
-            Socket socket = new Socket(IP, PORT);
-
-            Scanner scanner = new Scanner(System.in);
-
-            OutputStream out = socket.getOutputStream();
-
-            PrintStream printStream = new PrintStream(out);
-
-            System.out.println("Comecando modo Jogador vs Jogador");
-
-            System.out.println("Escolha par ou ímpar:");
-
-            do {
-
-                msg = scanner.nextLine();
-
-                printStream.println(msg);
-
-            } while (msg != "sair");
-
-            socket.close();
-            scanner.close();
-            printStream.close();
-
-        } catch (Exception e) {
-            System.out.println("Erro.");
-            return;
+            Cliente cliente = new Cliente();
+            cliente.start();
+        } catch (IOException ex) {
+            System.out.println("Erro: " + ex.getMessage());
         }
     }
 }
