@@ -42,22 +42,26 @@ class Cliente implements Runnable {
     }
 
     private void enviarMensagemLoopVsCPU() {
+
+        clienteObject.sendMessage(msg);
+
         msg = scanner.nextLine();
 
         clienteObject.sendMessage(msg);
 
         do {
+
             msg = scanner.nextLine();
+
             if (numerosPermitidos.contains(msg))
                 clienteObject.sendMessage(msg);
             else {
-                System.out.println("Você não escolheu um numero de 0 a 5... Tente novamente! ");
+                System.out.println("Voce não escolheu um numero de 0 a 5... Tente novamente! ");
             }
         } while(!msg.equalsIgnoreCase("sair"));
     }
 
     private void enviarMensagemLoopVsPlayer() {
-
         msg = scanner.nextLine();
 
         clienteObject.sendMessage(msg);

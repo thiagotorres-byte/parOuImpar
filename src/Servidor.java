@@ -43,6 +43,8 @@ class Servidor {
 
                 jogadorUm.sendMessage("Voce escolheu " + parOuImparEscolhaJogadorUm + "a CPU e: " + parOuImparEscolhaCPU);
 
+                jogadorUm.sendMessage("Escolha um numero de 0 a 5: ");
+
                 new Thread(() -> clienteLoopVsCPU(jogadorUm)).start();
             }
         }
@@ -105,24 +107,24 @@ class Servidor {
 
     private void notifyPlayervsPlayer(int vencedor, ClienteObject jogadorUm, ClienteObject jogadorDois) {
         if (vencedor == 1){
-            jogadorUm.sendMessage("Você ganhou a disputa de par ou impar!");
-            jogadorDois.sendMessage("Você perdeu a disputa de par ou impar!");
+            jogadorUm.sendMessage("Voce ganhou a disputa de par ou impar!");
+            jogadorDois.sendMessage("Voce perdeu a disputa de par ou impar!");
         } else if (vencedor == 2) {
-            jogadorUm.sendMessage("Você perdeu a disputa de par ou impar!");
-            jogadorDois.sendMessage("Você ganhou a disputa de par ou impar!");
+            jogadorUm.sendMessage("Voce perdeu a disputa de par ou impar!");
+            jogadorDois.sendMessage("Voce ganhou a disputa de par ou impar!");
         } else {
-            jogadorUm.sendMessage("Não foi possível identificar o ganhador =(");
-            jogadorDois.sendMessage("Não foi possível identificar o ganhador =(");
+            jogadorUm.sendMessage("Nao foi possivel identificar o ganhador =(");
+            jogadorDois.sendMessage("Nao foi possivel identificar o ganhador =(");
         }
     }
 
     private void notifyPlayervsCPU(int vencedor, ClienteObject jogadorUm) {
         if (vencedor == 1){
-            jogadorUm.sendMessage("Você ganhou a disputa de par ou impar!");
+            jogadorUm.sendMessage("Voce ganhou a disputa de par ou impar!");
         } else if (vencedor == 2) {
-            jogadorUm.sendMessage("Você perdeu a disputa de par ou impar!");
+            jogadorUm.sendMessage("Voce perdeu a disputa de par ou impar!");
         } else {
-            jogadorUm.sendMessage("Não foi possível identificar o ganhador =(");
+            jogadorUm.sendMessage("Nao foi possivel identificar o ganhador =(");
         }
     }
 
