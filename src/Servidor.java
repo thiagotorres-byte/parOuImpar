@@ -1,6 +1,5 @@
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
@@ -29,31 +28,38 @@ class Servidor {
 
                 ClienteObject jogadorDois = new ClienteObject(serverSocket.accept());
 
-                String parOuImparEscolhaJogadorDois = parOuImparEscolhaJogadorUm.equalsIgnoreCase("par") ? "impar" : "par";
+                if (Objects.equals(jogadorDois.getMessage(), "1")) {
 
-                jogadorDois.sendMessage("O jogador: " + jogadorUm.getRemoteSocketAddress() + " escolheu: "
-                        + parOuImparEscolhaJogadorUm + " e agora voce e: " + parOuImparEscolhaJogadorDois);
+                    String parOuImparEscolhaJogadorDois = parOuImparEscolhaJogadorUm.equalsIgnoreCase("par") ? "impar" : "par";
 
-                sendBothPlayers("Escolha um numero de 0 a 5: ", jogadorUm, jogadorDois);
+                    jogadorDois.sendMessage("O jogador: " + jogadorUm.getRemoteSocketAddress() + " escolheu: "
+                            + parOuImparEscolhaJogadorUm + " e agora voce e: " + parOuImparEscolhaJogadorDois);
 
-                Thread th = new Thread(() -> clienteLoopVsPlayer(jogadorUm, jogadorDois));
+                    sendBothPlayers("Escolha um numero de 0 a 5: ", jogadorUm, jogadorDois);
 
-                th.start();
+                    new Thread(() -> clienteLoopVsPlayer(jogadorUm, jogadorDois)).start();
+                } else {
+                    jogarVsCPU(jogadorDois);
+                }
 
             } else {
-
-                forcaEscolhaParOuImparJogadorUm(jogadorUm);
-
-                String parOuImparEscolhaCPU = parOuImparEscolhaJogadorUm.equalsIgnoreCase("par") ? "impar" : "par";
-
-                jogadorUm.sendMessage("A CPU e: " + parOuImparEscolhaCPU);
-
-                jogadorUm.sendMessage("Escolha um numero de 0 a 5 ou digite 'sair'");
-
-                new Thread(() -> clienteLoopVsCPU(jogadorUm)).start();
+                jogarVsCPU(jogadorUm);
             }
         }
 
+    }
+
+    private void jogarVsCPU(ClienteObject jogadorUm) {
+
+        forcaEscolhaParOuImparJogadorUm(jogadorUm);
+
+        String parOuImparEscolhaCPU = parOuImparEscolhaJogadorUm.equalsIgnoreCase("par") ? "impar" : "par";
+
+        jogadorUm.sendMessage("A CPU e: " + parOuImparEscolhaCPU);
+
+        jogadorUm.sendMessage("Escolha um numero de 0 a 5 ou digite 'sair'");
+
+        new Thread(() -> clienteLoopVsCPU(jogadorUm)).start();
     }
 
     private void forcaEscolhaParOuImparJogadorUm (ClienteObject jogadorUm){
