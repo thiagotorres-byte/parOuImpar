@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
@@ -35,7 +36,10 @@ class Servidor {
 
                 sendBothPlayers("Escolha um numero de 0 a 5: ", jogadorUm, jogadorDois);
 
-                new Thread(() -> clienteLoopVsPlayer(jogadorUm, jogadorDois)).start();
+                Thread th = new Thread(() -> clienteLoopVsPlayer(jogadorUm, jogadorDois));
+
+                th.start();
+
             } else {
 
                 forcaEscolhaParOuImparJogadorUm(jogadorUm);
@@ -104,7 +108,7 @@ class Servidor {
 
                 vencedor = verifyWinner(Integer.parseInt(msgJogadorUm), Integer.parseInt(msgJogadorDois));
 
-                notifyPlayervsPlayer(vencedor, jogadorUm,jogadorDois);
+                notifyPlayervsPlayer(vencedor, jogadorUm, jogadorDois, msgJogadorUm, msgJogadorDois);
 
                 sendBothPlayers("Escolha um numero de 0 a 5 ou digite 'sair'", jogadorUm, jogadorDois);
             }
@@ -114,13 +118,14 @@ class Servidor {
         }
     }
 
-    private void notifyPlayervsPlayer(int vencedor, ClienteObject jogadorUm, ClienteObject jogadorDois) {
+    private void notifyPlayervsPlayer(int vencedor, ClienteObject jogadorUm,
+                                      ClienteObject jogadorDois, String msgJogadorUm, String msgJogadorDois) {
         if (vencedor == 1){
-            jogadorUm.sendMessage("Voce ganhou a disputa de par ou impar!");
-            jogadorDois.sendMessage("Voce perdeu a disputa de par ou impar!");
+            jogadorUm.sendMessage("Voce ganhou a disputa de par ou impar! o jogador dois jogou: " + msgJogadorDois);
+            jogadorDois.sendMessage("Voce perdeu a disputa de par ou impar! o jogador um jogou: " + msgJogadorUm);
         } else if (vencedor == 2) {
-            jogadorUm.sendMessage("Voce perdeu a disputa de par ou impar!");
-            jogadorDois.sendMessage("Voce ganhou a disputa de par ou impar!");
+            jogadorUm.sendMessage("Voce perdeu a disputa de par ou impar!o jogador dois jogou: " + msgJogadorDois );
+            jogadorDois.sendMessage("Voce ganhou a disputa de par ou impar!o jogador um jogou: " + msgJogadorUm);
         } else {
             jogadorUm.sendMessage("Nao foi possivel identificar o ganhador =(");
             jogadorDois.sendMessage("Nao foi possivel identificar o ganhador =(");
