@@ -36,6 +36,8 @@ class Cliente implements Runnable {
 
             } while (!msg.equalsIgnoreCase("3"));
 
+            System.out.println("Finalizando o programa...");
+
         } finally {
             clienteObject.close();
         }
@@ -79,62 +81,6 @@ class Cliente implements Runnable {
     public static void main(String[] args) {
         try {
             Cliente cliente = new Cliente();
-            cliente.start();
-        } catch (IOException ex) {
-            System.out.println("Erro: " + ex.getMessage());
-        }
-    }
-
-    @Override
-    public void run() {
-        String msg;
-        try {
-            while ((msg = clienteObject.getMessage()) != null) {
-                if ("sair".equalsIgnoreCase(msg))
-                    return;
-                System.out.println(msg);
-            }
-        } finally {
-            clienteObject.close();
-        }
-    }
-}
-
-class Cliente2 implements Runnable {
-    private final String SERVER_ADRESS = "127.0.0.1";
-    private Scanner scanner;
-    ClienteObject clienteObject;
-    List<Integer> numerosPermitidos = Arrays.asList(0, 1, 2, 3, 4, 5);
-
-    public Cliente2() throws IOException {
-        this.scanner = new Scanner(System.in);
-    }
-
-    public void start() throws IOException {
-        try {
-            clienteObject = new ClienteObject(
-                    new Socket(SERVER_ADRESS, Servidor.PORT)
-            );
-
-            new Thread(this).start();
-
-            enviarMensagemLoop();
-        } finally {
-            clienteObject.close();
-        }
-    }
-
-    private void enviarMensagemLoop() {
-        String msg;
-        do {
-            msg = scanner.nextLine();
-            clienteObject.sendMessage(msg);
-        } while(!msg.equalsIgnoreCase("sair"));
-    }
-
-    public static void main(String[] args) {
-        try {
-            Cliente2 cliente = new Cliente2();
             cliente.start();
         } catch (IOException ex) {
             System.out.println("Erro: " + ex.getMessage());
