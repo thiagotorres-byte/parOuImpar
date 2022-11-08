@@ -7,7 +7,7 @@ public class Player {
 
     private GameMode gameMode;
 
-    private static int pontuacao;
+    private int pontuacao;
     private String escolhaParOuImpar;
     private ClienteFacade clienteFacade;
 
@@ -25,7 +25,6 @@ public class Player {
         this.pontuacao = 0;
     }
 
-
     public String getEscolhaParOuImpar() {
         return escolhaParOuImpar;
     }
@@ -38,6 +37,10 @@ public class Player {
         }
     }
 
+    public void ganhouPartida(){
+        this.pontuacao++;
+    }
+
     public void setEscolhaParOuImpar(String escolhaParOuImpar) {
         this.escolhaParOuImpar = escolhaParOuImpar;
     }
@@ -45,4 +48,10 @@ public class Player {
     public GameMode getGameMode() {
         return gameMode;
     }
+
+    public ClienteFacade getClienteFacade() {
+        return clienteFacade;
+    }
+
+    public int getPontuacao() { return pontuacao;}
 }

@@ -20,13 +20,13 @@ public class ComunicacaoImpl implements Comunicacao {
         this.player = player;
     }
 
-    public void conectServer() throws IOException {
+    public void conectServer() {
         try {
             clienteFacade = new ClienteFacade(
                     new Socket(ipAdress, port)
             );
-        } finally {
-            clienteFacade.close();
+        } catch (IOException ex) {
+            System.out.println("Erro: " + ex.getMessage());
         }
     }
 
