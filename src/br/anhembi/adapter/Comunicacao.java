@@ -1,4 +1,4 @@
-package br.anhembi.game;
+package br.anhembi.adapter;
 
 import br.anhembi.cliente.ClienteFacade;
 

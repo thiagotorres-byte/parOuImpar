@@ -1,8 +1,9 @@
-package br.anhembi.game;
+package br.anhembi.adapter;
 
 import br.anhembi.cliente.ClienteFacade;
 import br.anhembi.exception.EnviarEscolhaParOuImparException;
 import br.anhembi.exception.GameModeException;
+import br.anhembi.game.Rules;
 import br.anhembi.player.Player;
 
 import java.io.IOException;

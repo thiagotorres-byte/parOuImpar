@@ -1,7 +1,7 @@
 package br.anhembi.cliente;
 
-import br.anhembi.game.Comunicacao;
-import br.anhembi.game.ComunicacaoImpl;
+import br.anhembi.adapter.Comunicacao;
+import br.anhembi.adapter.ComunicacaoImpl;
 import br.anhembi.game.GameMode;
 import br.anhembi.game.PainelJogo;
 import br.anhembi.player.Player;
