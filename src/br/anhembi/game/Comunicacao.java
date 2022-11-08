@@ -4,7 +4,7 @@ import br.anhembi.cliente.ClienteFacade;
 
 import java.io.IOException;
 
-public interface Game {
+public interface Comunicacao {
 
     void conectServer() throws IOException;
 

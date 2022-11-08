@@ -8,14 +8,14 @@ import br.anhembi.player.Player;
 import java.io.IOException;
 import java.net.Socket;
 
-public class GameImpl implements Game {
+public class ComunicacaoImpl implements Comunicacao {
 
     private Player player;
     private static final int port = 9863;
     private static final String ipAdress = "127.0.0.1";
     private ClienteFacade clienteFacade;
 
-    public GameImpl(Player player) {
+    public ComunicacaoImpl(Player player) {
         this.player = player;
     }
 

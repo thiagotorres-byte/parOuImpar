@@ -1,7 +1,7 @@
 package br.anhembi.cliente;
 
-import br.anhembi.game.Game;
-import br.anhembi.game.GameImpl;
+import br.anhembi.game.Comunicacao;
+import br.anhembi.game.ComunicacaoImpl;
 import br.anhembi.game.GameMode;
 import br.anhembi.game.PainelJogo;
 import br.anhembi.player.Player;
@@ -12,7 +12,7 @@ import java.util.Scanner;
 class Cliente implements Runnable {
 
     private Scanner scanner;
-    private Game game;
+    private Comunicacao comunicacao;
     private String mensagem;
 
     public static void main(String[] args) {
@@ -38,9 +38,9 @@ class Cliente implements Runnable {
                 PainelJogo.imprimir();
 
                 Player player = new Player();
-                game.conectServer();
+                comunicacao.conectServer();
 
-                game = new GameImpl(player);
+                comunicacao = new ComunicacaoImpl(player);
 
                 ecolheMododeJogo(player);
 
@@ -53,7 +53,7 @@ class Cliente implements Runnable {
             System.out.println("Finalizando o programa...");
 
         } finally {
-            game.encerrarConexao();
+            comunicacao.encerrarConexao();
         }
     }
 
@@ -62,7 +62,7 @@ class Cliente implements Runnable {
             String jogada = scanner.nextLine();
             mensagem = jogada;
 
-            game.enviarJogada(jogada);
+            comunicacao.enviarJogada(jogada);
 
         } while(!mensagem.equalsIgnoreCase("sair"));
     }
@@ -71,13 +71,13 @@ class Cliente implements Runnable {
         String parOuImpar = scanner.nextLine();
         mensagem = parOuImpar;
         player.setEscolhaParOuImpar(parOuImpar);
-        game.enviarEscolhaParOuImpar();
+        comunicacao.enviarEscolhaParOuImpar();
     }
 
     private void ecolheMododeJogo(Player player) {
         String gameMode = scanner.nextLine();
         player.setGameMode(gameMode);
-        game.enviarModoDeJogo();
+        comunicacao.enviarModoDeJogo();
     }
 
 
@@ -85,13 +85,13 @@ class Cliente implements Runnable {
     public void run() {
         String msg;
         try {
-            while ((msg = game.getClienteObject().getMessage()) != null) {
+            while ((msg = comunicacao.getClienteObject().getMessage()) != null) {
                 if ("sair".equalsIgnoreCase(msg))
                     return;
                 System.out.println(msg);
             }
         } finally {
-            game.encerrarConexao();
+            comunicacao.encerrarConexao();
         }
     }
 }
