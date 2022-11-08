@@ -1,18 +1,20 @@
+package br.anhembi;
+
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.util.Scanner;
 
-public class ClienteObject {
+public class ClienteFacade {
     private Socket socket;
     private Scanner inputMessage;
     private PrintStream outputMessage;
 
-    public ClienteObject (Socket socket) throws IOException {
+    public ClienteFacade(Socket socket) throws IOException {
         this.socket = socket;
 
-        System.out.println("Cliente conectado " + socket.getRemoteSocketAddress());
+        System.out.println("br.anhembi.Cliente conectado " + socket.getRemoteSocketAddress());
 
         inputMessage = new Scanner(socket.getInputStream());
 
