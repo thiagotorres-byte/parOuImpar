@@ -1,16 +1,20 @@
+package br.anhembi.server;
+
+import br.anhembi.ClienteFacade;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.Objects;
 import java.util.Random;
 
-class Servidor {
+public class Servidor {
     public static final int PORT = 9863;
     private ServerSocket serverSocket;
     String parOuImparEscolhaJogadorUm;
 
     public void start() throws IOException {
         serverSocket = new ServerSocket(PORT);
-        System.out.println("Servidor iniciando na porta " + PORT);
+        System.out.println("br.anhembi.server.Servidor iniciando na porta " + PORT);
         serverloop();
     }
 
@@ -18,7 +22,7 @@ class Servidor {
 
         while (true){
 
-            ClienteObject jogadorUm = new ClienteObject(serverSocket.accept());
+            ClienteFacade jogadorUm = new ClienteFacade(serverSocket.accept());
 
             if (Objects.equals(jogadorUm.getMessage(), "1")) {
 
@@ -26,7 +30,7 @@ class Servidor {
 
                 jogadorUm.sendMessage("Aguardando segundo jogador...");
 
-                ClienteObject jogadorDois = new ClienteObject(serverSocket.accept());
+                ClienteFacade jogadorDois = new ClienteFacade(serverSocket.accept());
 
                 if (Objects.equals(jogadorDois.getMessage(), "1")) {
 
@@ -49,7 +53,7 @@ class Servidor {
 
     }
 
-    private void jogarVsCPU(ClienteObject jogadorUm) {
+    private void jogarVsCPU(ClienteFacade jogadorUm) {
 
         forcaEscolhaParOuImparJogadorUm(jogadorUm);
 
@@ -62,7 +66,7 @@ class Servidor {
         new Thread(() -> clienteLoopVsCPU(jogadorUm)).start();
     }
 
-    private void forcaEscolhaParOuImparJogadorUm (ClienteObject jogadorUm){
+    private void forcaEscolhaParOuImparJogadorUm (ClienteFacade jogadorUm){
 
         do {
             jogadorUm.sendMessage("Escolha 'par' ou 'impar': ");
@@ -73,7 +77,7 @@ class Servidor {
 
     }
 
-    private void clienteLoopVsCPU(ClienteObject jogadorUm) {
+    private void clienteLoopVsCPU(ClienteFacade jogadorUm) {
         Random random = new Random();
         int numeroCPU;
         String msgJogadorUm;
@@ -100,7 +104,7 @@ class Servidor {
         }
     }
 
-    private void clienteLoopVsPlayer(ClienteObject jogadorUm, ClienteObject jogadorDois){
+    private void clienteLoopVsPlayer(ClienteFacade jogadorUm, ClienteFacade jogadorDois){
         String msgJogadorUm;
         String msgJogadorDois;
         int vencedor;
@@ -124,8 +128,8 @@ class Servidor {
         }
     }
 
-    private void notifyPlayervsPlayer(int vencedor, ClienteObject jogadorUm,
-                                      ClienteObject jogadorDois, String msgJogadorUm, String msgJogadorDois) {
+    private void notifyPlayervsPlayer(int vencedor, ClienteFacade jogadorUm,
+                                      ClienteFacade jogadorDois, String msgJogadorUm, String msgJogadorDois) {
         if (vencedor == 1){
             jogadorUm.sendMessage("Voce ganhou a disputa de par ou impar! o jogador dois jogou: " + msgJogadorDois);
             jogadorDois.sendMessage("Voce perdeu a disputa de par ou impar! o jogador um jogou: " + msgJogadorUm);
@@ -138,7 +142,7 @@ class Servidor {
         }
     }
 
-    private void notifyPlayervsCPU(int vencedor, ClienteObject jogadorUm, int numeroCPU) {
+    private void notifyPlayervsCPU(int vencedor, ClienteFacade jogadorUm, int numeroCPU) {
         if (vencedor == 1){
             jogadorUm.sendMessage("Voce ganhou a disputa de par ou impar! A CPU jogou o numero: " + numeroCPU);
         } else if (vencedor == 2) {
@@ -164,7 +168,7 @@ class Servidor {
         }
     }
 
-    private void sendBothPlayers(String msg, ClienteObject jogadorUm, ClienteObject jogadorDois){
+    private void sendBothPlayers(String msg, ClienteFacade jogadorUm, ClienteFacade jogadorDois){
         jogadorUm.sendMessage(msg);
         jogadorDois.sendMessage(msg);
     }
@@ -177,6 +181,6 @@ class Servidor {
             System.out.println("Erro: " + ex.getMessage());
         }
 
-        System.out.println("Servidor finalizado");
+        System.out.println("br.anhembi.server.Servidor finalizado");
     }
 }
