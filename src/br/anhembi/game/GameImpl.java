@@ -1,6 +1,6 @@
 package br.anhembi.game;
 
-import br.anhembi.ClienteFacade;
+import br.anhembi.cliente.ClienteFacade;
 import br.anhembi.exception.EnviarEscolhaParOuImparException;
 import br.anhembi.exception.GameModeException;
 import br.anhembi.player.Player;

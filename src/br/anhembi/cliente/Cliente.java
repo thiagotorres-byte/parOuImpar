@@ -1,4 +1,4 @@
-package br.anhembi;
+package br.anhembi.cliente;
 
 import br.anhembi.game.Game;
 import br.anhembi.game.GameImpl;

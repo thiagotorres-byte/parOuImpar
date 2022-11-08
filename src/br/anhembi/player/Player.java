@@ -1,6 +1,6 @@
 package br.anhembi.player;
 
-import br.anhembi.ClienteFacade;
+import br.anhembi.cliente.ClienteFacade;
 import br.anhembi.game.GameMode;
 
 public class Player {

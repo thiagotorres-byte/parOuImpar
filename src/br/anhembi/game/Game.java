@@ -1,6 +1,6 @@
 package br.anhembi.game;
 
-import br.anhembi.ClienteFacade;
+import br.anhembi.cliente.ClienteFacade;
 
 import java.io.IOException;
 

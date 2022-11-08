@@ -1,4 +1,4 @@
-package br.anhembi;
+package br.anhembi.cliente;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -14,7 +14,7 @@ public class ClienteFacade {
     public ClienteFacade(Socket socket) throws IOException {
         this.socket = socket;
 
-        System.out.println("br.anhembi.Cliente conectado " + socket.getRemoteSocketAddress());
+        System.out.println("br.anhembi.cliente.Cliente conectado " + socket.getRemoteSocketAddress());
 
         inputMessage = new Scanner(socket.getInputStream());
 
